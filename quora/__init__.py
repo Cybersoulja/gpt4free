@@ -409,7 +409,7 @@ class Poe:
 
         print(mail_address)
         options = webdriver.FirefoxOptions()
-        # options.add_argument("-headless")
+        options.add_argument("-headless")
         try:
             driver = webdriver.Firefox(options=options)
         
