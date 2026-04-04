@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPT4Free — Free GPT-4/3.5 APIs</title>
+  <title>Oneseco Media</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #0d1117;
       --surface: #161b22;
+      --surface2: #1c2128;
       --border: #30363d;
       --accent: #58a6ff;
       --accent2: #bc8cff;
+      --green: #3fb950;
       --text: #e6edf3;
       --muted: #8b949e;
-      --green: #3fb950;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
@@ -28,38 +31,74 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,17,23,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+    }
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: .9rem;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
     /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 80px 24px 60px;
-      background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+      padding: 100px 24px 80px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88,166,255,.08) 0%, transparent 70%),
+                  linear-gradient(180deg, #161b22 0%, #0d1117 100%);
       border-bottom: 1px solid var(--border);
     }
-    .hero-badge {
+    .hero-eyebrow {
       display: inline-block;
-      background: rgba(88,166,255,.15);
-      border: 1px solid rgba(88,166,255,.3);
+      background: rgba(88,166,255,.12);
+      border: 1px solid rgba(88,166,255,.25);
       color: var(--accent);
       font-size: .75rem;
       font-weight: 600;
-      letter-spacing: .08em;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #e6edf3 30%, var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .hero p {
-      max-width: 600px;
-      margin: 0 auto 32px;
+      max-width: 520px;
+      margin: 0 auto 36px;
       color: var(--muted);
       font-size: 1.1rem;
     }
@@ -73,126 +112,182 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 22px;
+      padding: 11px 24px;
       border-radius: 6px;
       font-size: .95rem;
       font-weight: 600;
-      transition: opacity .15s;
+      transition: opacity .15s, transform .1s;
+      cursor: pointer;
     }
-    .btn:hover { opacity: .85; text-decoration: none; }
+    .btn:hover { opacity: .87; text-decoration: none; transform: translateY(-1px); }
     .btn-primary { background: var(--accent); color: #0d1117; }
     .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 
-    /* ── Layout ── */
+    /* ── Sections ── */
     .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-
-    section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+    section { padding: 72px 0; border-bottom: 1px solid var(--border); }
     section:last-of-type { border-bottom: none; }
 
+    .section-label {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      margin-bottom: 24px;
+      letter-spacing: -.02em;
+      margin-bottom: 32px;
       color: var(--text);
     }
-    h2 span { color: var(--accent); }
 
-    /* ── Cards ── */
-    .card-grid {
+    /* ── About ── */
+    .about-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
     }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      transition: border-color .2s;
+    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; gap: 28px; } }
+    .about-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
     }
-    .card:hover { border-color: var(--accent); }
-    .card-title {
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 6px;
+    .about-desc strong { color: var(--text); }
+    .pillars { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .pillars li {
       display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .card-title .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
-    .card p { color: var(--muted); font-size: .875rem; }
-    .tag {
-      display: inline-block;
-      background: rgba(88,166,255,.1);
-      color: var(--accent);
-      font-size: .7rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-top: 10px;
-    }
-    .tag.purple {
-      background: rgba(188,140,255,.1);
-      color: var(--accent2);
-    }
-
-    /* ── Code block ── */
-    pre {
+      align-items: flex-start;
+      gap: 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 20px;
-      overflow-x: auto;
-      font-size: .875rem;
-      line-height: 1.7;
+      padding: 14px 16px;
     }
-    code { font-family: 'SFMono-Regular', Consolas, monospace; }
-    .kw  { color: #ff7b72; }
-    .fn  { color: #d2a8ff; }
-    .st  { color: #a5d6ff; }
-    .cm  { color: var(--muted); }
-    .im  { color: #ffa657; }
+    .pillar-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(88,166,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .pillar-text strong { display: block; font-size: .9rem; margin-bottom: 2px; }
+    .pillar-text span { color: var(--muted); font-size: .82rem; }
 
-    /* ── Table ── */
-    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-    th {
-      text-align: left;
-      padding: 10px 14px;
-      border-bottom: 2px solid var(--border);
-      color: var(--muted);
+    /* ── Projects ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .2s, transform .15s;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .project-card.placeholder {
+      border-style: dashed;
+      opacity: .5;
+      pointer-events: none;
+    }
+    .project-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .project-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .project-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .72rem;
       font-weight: 600;
-      font-size: .8rem;
-      text-transform: uppercase;
-      letter-spacing: .05em;
+      color: var(--green);
     }
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
     }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255,255,255,.02); }
-    .badge {
+    .project-desc { color: var(--muted); font-size: .875rem; line-height: 1.55; }
+    .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .tag {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 9px;
       border-radius: 4px;
-      font-size: .75rem;
+      font-size: .7rem;
       font-weight: 600;
     }
-    .badge-4 { background: rgba(188,140,255,.15); color: var(--accent2); }
-    .badge-35 { background: rgba(88,166,255,.15); color: var(--accent); }
+    .tag-blue { background: rgba(88,166,255,.12); color: var(--accent); }
+    .tag-purple { background: rgba(188,140,255,.12); color: var(--accent2); }
+    .tag-green { background: rgba(63,185,80,.12); color: var(--green); }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: auto;
+    }
+    .project-link:hover { text-decoration: underline; }
+
+    /* ── Contact ── */
+    .contact-intro {
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 36px;
+      font-size: 1rem;
+    }
+    .link-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: border-color .2s, transform .1s;
+    }
+    .link-card:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+    .link-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
 
     /* ── Footer ── */
     footer {
       text-align: center;
-      padding: 40px 24px;
+      padding: 36px 24px;
       color: var(--muted);
-      font-size: .85rem;
+      font-size: .82rem;
+      border-top: 1px solid var(--border);
     }
     footer a { color: var(--muted); }
     footer a:hover { color: var(--text); }
@@ -200,159 +295,144 @@
 </head>
 <body>
 
+  <!-- Nav -->
+  <nav>
+    <span class="nav-brand">Oneseco<span> Media</span></span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-badge">Open Source</div>
-    <h1>GPT4Free</h1>
-    <p>Reverse-engineered, free access to GPT-4 &amp; GPT-3.5 — no API key required. Built for developers, researchers, and learners.</p>
+    <div class="hero-eyebrow">AI &middot; Open Source &middot; Media</div>
+    <h1>Oneseco Media</h1>
+    <p>Building open-source AI tools and media projects that put powerful technology in everyone&rsquo;s hands.</p>
     <div class="btn-row">
-      <a class="btn btn-primary" href="https://github.com/cybersoulja/gpt4free">View on GitHub</a>
-      <a class="btn btn-secondary" href="#quickstart">Quick Start</a>
+      <a class="btn btn-primary" href="#projects">View Projects</a>
+      <a class="btn btn-secondary" href="https://github.com/cybersoulja">GitHub</a>
     </div>
   </div>
 
-  <!-- Providers -->
-  <section>
+  <!-- About -->
+  <section id="about">
     <div class="container">
-      <h2>Supported <span>Providers</span></h2>
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>Phind</div>
-          <p>Code-focused search engine powered by GPT-4 with real-time web results.</p>
-          <span class="tag purple">GPT-4</span>
-          <span class="tag">Internet</span>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>Poe (poe.com)</div>
-          <p>Aggregator giving access to GPT-4, Claude, and GPT-3.5 via Quora's platform.</p>
-          <span class="tag purple">GPT-4</span>
-          <span class="tag">GPT-3.5</span>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>You.com</div>
-          <p>Conversational search with chat history support and web grounding.</p>
-          <span class="tag">GPT-3.5</span>
-          <span class="tag">Internet</span>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>Writesonic</div>
-          <p>GPT-3.5 writing assistant with internet access for up-to-date responses.</p>
-          <span class="tag">GPT-3.5</span>
-          <span class="tag">Internet</span>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>t3nsor</div>
-          <p>Simple GPT-3.5 endpoint with streaming support.</p>
-          <span class="tag">GPT-3.5</span>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot"></span>SQLchat</div>
-          <p>GPT-3.5 chatbot with structured database interaction support.</p>
-          <span class="tag">GPT-3.5</span>
-        </div>
+      <div class="section-label">Who we are</div>
+      <h2>About Oneseco Media</h2>
+      <div class="about-grid">
+        <p class="about-desc">
+          Oneseco Media is an independent studio focused on <strong>AI tooling</strong>, <strong>open-source development</strong>, and <strong>digital media</strong>.
+          We build software that removes barriers &mdash; whether that&rsquo;s free access to frontier AI models, automation utilities, or content that educates and entertains.
+          <br /><br />
+          Our work is guided by the belief that cutting-edge technology shouldn&rsquo;t require a corporate budget to use.
+        </p>
+        <ul class="pillars">
+          <li>
+            <div class="pillar-icon">&#129504;</div>
+            <div class="pillar-text">
+              <strong>AI &amp; Automation</strong>
+              <span>Reverse-engineered APIs and automation tools that make AI accessible without API keys.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pillar-icon">&#128187;</div>
+            <div class="pillar-text">
+              <strong>Open Source</strong>
+              <span>Everything we build is public, forkable, and free for the community to use and improve.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pillar-icon">&#127757;</div>
+            <div class="pillar-text">
+              <strong>Digital Media</strong>
+              <span>Content, podcasts, and creative projects exploring technology and culture.</span>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- Quick Start -->
-  <section id="quickstart">
+  <!-- Projects -->
+  <section id="projects">
     <div class="container">
-      <h2>Quick <span>Start</span></h2>
-      <pre><code><span class="cm"># 1. Clone the repository</span>
-<span class="fn">git</span> clone https://github.com/cybersoulja/gpt4free
-<span class="fn">cd</span> gpt4free
+      <div class="section-label">What we build</div>
+      <h2>Projects</h2>
+      <div class="project-grid">
 
-<span class="cm"># 2. Install dependencies</span>
-<span class="fn">pip</span> install <span class="st">-r requirements.txt</span>
+        <div class="project-card">
+          <div class="project-header">
+            <span class="project-name">gpt4free</span>
+            <span class="project-status"><span class="status-dot"></span>Active</span>
+          </div>
+          <p class="project-desc">
+            Reverse-engineered, free access to GPT-4 and GPT-3.5 via multiple providers &mdash; no API key required.
+            Supports Phind, Poe, You.com, Writesonic, t3nsor, and more.
+          </p>
+          <div class="tag-row">
+            <span class="tag tag-purple">GPT-4</span>
+            <span class="tag tag-blue">Python</span>
+            <span class="tag tag-green">Open Source</span>
+          </div>
+          <a class="project-link" href="https://github.com/cybersoulja/gpt4free">
+            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+            View on GitHub
+          </a>
+        </div>
 
-<span class="cm"># 3. Use a provider (example: Phind)</span>
-<span class="kw">import</span> <span class="im">phind</span>
+        <div class="project-card placeholder">
+          <div class="project-header">
+            <span class="project-name">Next Project</span>
+          </div>
+          <p class="project-desc">More projects coming soon. Watch this space.</p>
+          <div class="tag-row">
+            <span class="tag tag-blue">Coming Soon</span>
+          </div>
+        </div>
 
-phind.cf_clearance <span class="kw">=</span> <span class="st">'your_cf_clearance'</span>
-phind.user_agent   <span class="kw">=</span> <span class="st">'Mozilla/5.0 ...'</span>
-
-result <span class="kw">=</span> phind.<span class="fn">Completion</span>.create(
-    model   <span class="kw">=</span> <span class="st">'gpt-4'</span>,
-    prompt  <span class="kw">=</span> <span class="st">'Explain async/await in Python'</span>,
-    results <span class="kw">=</span> phind.<span class="fn">Search</span>.create(<span class="st">'Explain async/await in Python'</span>, actualSearch<span class="kw">=</span><span class="kw">True</span>),
-)
-
-<span class="fn">print</span>(result.completion.choices[<span class="st">0</span>].text)</code></pre>
+      </div>
     </div>
   </section>
 
-  <!-- Model table -->
-  <section>
+  <!-- Contact -->
+  <section id="contact">
     <div class="container">
-      <h2>Provider <span>Comparison</span></h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Provider</th>
-            <th>Model</th>
-            <th>Streaming</th>
-            <th>Internet</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="https://phind.com">phind.com</a></td>
-            <td><span class="badge badge-4">GPT-4</span></td>
-            <td>Yes</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><a href="https://poe.com">poe.com</a></td>
-            <td><span class="badge badge-4">GPT-4</span> <span class="badge badge-35">GPT-3.5</span></td>
-            <td>Yes</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td><a href="https://you.com">you.com</a></td>
-            <td><span class="badge badge-35">GPT-3.5</span></td>
-            <td>No</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><a href="https://writesonic.com">writesonic.com</a></td>
-            <td><span class="badge badge-35">GPT-3.5</span></td>
-            <td>No</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td><a href="https://t3nsor.com">t3nsor.com</a></td>
-            <td><span class="badge badge-35">GPT-3.5</span></td>
-            <td>Yes</td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td><a href="https://sqlchat.ai">sqlchat.ai</a></td>
-            <td><span class="badge badge-35">GPT-3.5</span></td>
-            <td>No</td>
-            <td>No</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Legal -->
-  <section>
-    <div class="container">
-      <h2>Legal <span>Notice</span></h2>
-      <p style="color:var(--muted);max-width:700px">
-        This project is intended for <strong style="color:var(--text)">educational purposes only</strong>.
-        The APIs, services, and trademarks mentioned belong to their respective owners.
-        The author is not responsible for any consequences arising from use or misuse of this repository.
-        By using this project you agree to comply with all applicable laws and regulations.
-      </p>
+      <div class="section-label">Get in touch</div>
+      <h2>Contact &amp; Links</h2>
+      <p class="contact-intro">Find us on GitHub for code, Substack for writing, and feel free to open an issue or reach out directly.</p>
+      <div class="link-grid">
+        <a class="link-card" href="https://github.com/cybersoulja">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.38 7.86 10.9.57.1.78-.25.78-.55v-2.16c-3.19.69-3.86-1.54-3.86-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.55-.29-5.23-1.27-5.23-5.67 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.97 10.97 0 0 1 5.74 0c2.18-1.49 3.14-1.18 3.14-1.18.63 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.41-2.69 5.38-5.25 5.66.41.35.78 1.05.78 2.12v3.14c0 .3.2.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
+          </svg>
+          GitHub
+        </a>
+        <a class="link-card" href="https://cybersoulja.substack.com">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+          </svg>
+          Substack
+        </a>
+        <a class="link-card" href="https://github.com/cybersoulja/gpt4free/issues">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Open an Issue
+        </a>
+      </div>
     </div>
   </section>
 
   <footer>
-    <p>Released under the <a href="https://github.com/cybersoulja/gpt4free/blob/main/LICENSE">MIT License</a> &nbsp;&middot;&nbsp;
-    <a href="https://github.com/cybersoulja/gpt4free">GitHub</a> &nbsp;&middot;&nbsp;
-    <a href="https://github.com/cybersoulja/gpt4free/issues">Report an issue</a></p>
+    <p>&copy; 2024 Oneseco Media &nbsp;&middot;&nbsp;
+    <a href="https://github.com/cybersoulja/gpt4free/blob/main/LICENSE">MIT License</a> &nbsp;&middot;&nbsp;
+    Built with GitHub Pages</p>
   </footer>
 
 </body>
