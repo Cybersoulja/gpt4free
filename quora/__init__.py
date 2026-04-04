@@ -379,37 +379,38 @@ class Completion:
 
 
 class Poe:
-    def __init__(self, model: str = "ChatGPT"):
+    def __init__(self, model: str = "ChatGPT", headless: bool = True):
         # validating the model
         if model and model not in MODELS:
             raise RuntimeError(
                 "Sorry, the model you provided does not exist. Please check and try again."
             )
         self.model = MODELS[model]
-        self.cookie = self.__load_cookie()
+        self.cookie = self.__load_cookie(headless=headless)
         self.client = PoeClient(self.cookie)
 
-    def __load_cookie(self) -> str:
+    def __load_cookie(self, headless: bool = True) -> str:
         if (cookie_file := Path("./quora/cookie.json")).exists():
             with cookie_file.open() as fp:
                 cookie = json.load(fp)
                 if datetime.fromtimestamp(cookie["expiry"]) < datetime.now():
-                    cookie = self.__register_and_get_cookie()
+                    cookie = self.__register_and_get_cookie(headless=headless)
                 else:
                     print("Loading the cookie from file")
         else:
-            cookie = self.__register_and_get_cookie()
+            cookie = self.__register_and_get_cookie(headless=headless)
 
         return unquote(cookie["value"])
 
     @classmethod
-    def __register_and_get_cookie(cls) -> dict:
+    def __register_and_get_cookie(cls, headless: bool = True) -> dict:
         mail_client = Emailnator()
         mail_address = mail_client.get_mail()
 
         print(mail_address)
         options = webdriver.FirefoxOptions()
-        options.add_argument("-headless")
+        if headless:
+            options.add_argument("-headless")
         try:
             driver = webdriver.Firefox(options=options)
         
