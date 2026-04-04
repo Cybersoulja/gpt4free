@@ -1,0 +1,8 @@
+name            = "gpt4free-worker"
+main            = "worker.js"
+compatibility_date = "2024-04-01"
+
+[vars]
+# Default provider — can be overridden per-request via the X-Provider header.
+# Supported values: "you" (more coming soon)
+DEFAULT_PROVIDER = "you"
